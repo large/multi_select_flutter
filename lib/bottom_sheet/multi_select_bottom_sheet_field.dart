@@ -191,8 +191,8 @@ class MultiSelectBottomSheetField<V> extends FormField<List<V>> {
                 checkColor: checkColor,
                 isDismissible: isDismissible,
               );
-              return _MultiSelectBottomSheetFieldView<V?>._withState(
-                  view as _MultiSelectBottomSheetFieldView<V?>, state);
+              return _MultiSelectBottomSheetFieldView<V>._withState(
+                  view as _MultiSelectBottomSheetFieldView<V>, state);
             });
 }
 
@@ -205,7 +205,7 @@ class _MultiSelectBottomSheetFieldView<V> extends StatefulWidget {
   final List<V> initialValue;
   final Widget? title;
   final void Function(List<V>)? onSelectionChanged;
-  final void Function(List<V>)? onConfirm;
+  final void Function(List<V>) onConfirm;
   final bool searchable;
   final Text? confirmText;
   final Text? cancelText;
@@ -240,7 +240,7 @@ class _MultiSelectBottomSheetFieldView<V> extends StatefulWidget {
     this.listType,
     this.decoration,
     this.onSelectionChanged,
-    this.onConfirm,
+    required this.onConfirm,
     this.chipDisplay,
     required this.initialValue,
     required this.searchable,
