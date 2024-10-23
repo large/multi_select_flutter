@@ -100,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
               //################################################################################################
               MultiSelectDialogField(
                 items: _items,
-                title: Text("Animals"),
+                title: Text("Animals - really long dialog text yeah"),
                 selectedColor: Colors.blue,
                 decoration: BoxDecoration(
                   color: Colors.blue.withOpacity(0.1),
@@ -115,7 +115,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   color: Colors.blue,
                 ),
                 buttonText: Text(
-                  "Favorite Animals",
+                  softWrap: true,
+                  maxLines: 2,
+                  "Favorite Animals - this is a very long text to test wrapping for this shit",
                   style: TextStyle(
                     color: Colors.blue[800],
                     fontSize: 16,
@@ -144,8 +146,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       initialChildSize: 0.4,
                       listType: MultiSelectListType.CHIP,
                       searchable: true,
-                      buttonText: Text("Favorite Animals"),
-                      title: Text("Animals"),
+                      buttonText: Text("Favorite Animals - long text - long text - long text - wtf"),
+                      title: Text("Animals - this text got really long for a purpose"),
                       items: _items,
                       onConfirm: (values) {
                         setState(() {
@@ -180,8 +182,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 key: _multiSelectKey,
                 initialChildSize: 0.7,
                 maxChildSize: 0.95,
-                title: Text("Animals"),
-                buttonText: Text("Favorite Animals"),
+                title: Text("Animals - overall a really long text yeah all"),
+                buttonText: Text("Favorite Animals - really long text testing 123 - getting bigger yeah"),
                 items: _items,
                 searchable: true,
                 validator: (values) {
@@ -216,7 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
               MultiSelectChipField<Animal>(
                 items: _items,
                 initialValue: [_animals[4], _animals[7], _animals[9]],
-                title: Text("Animals"),
+                title: Text("Animals with a header text that is really long. Wrap it?"),
                 headerColor: Colors.blue.withOpacity(0.5),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.blue.shade700, width: 1.8),

@@ -425,7 +425,7 @@ class __MultiSelectBottomSheetFieldViewState<V>
                 widget.state!.didChange(selected);
               }
               _selectedItems = selected;
-              if (widget.onConfirm != null) widget.onConfirm!(selected);
+              widget.onConfirm(selected);
             },
             onSelectionChanged: widget.onSelectionChanged,
             searchable: widget.searchable,
@@ -436,7 +436,7 @@ class __MultiSelectBottomSheetFieldViewState<V>
           );
         });
     print(myVar.toString());
-    _selectedItems = myVar!;
+    _selectedItems = myVar != null ? myVar : [];
   }
 
   @override

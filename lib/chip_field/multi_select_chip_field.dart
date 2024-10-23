@@ -295,172 +295,182 @@ class __MultiSelectChipFieldViewState<V>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          decoration: widget.decoration ??
-              BoxDecoration(
-                border:
-                    Border.all(width: 1, color: Theme.of(context).primaryColor),
-              ),
-          child: Column(
-            children: [
-              widget.showHeader
-                  ? Container(
-                      color:
-                          widget.headerColor ?? Theme.of(context).primaryColor,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _showSearch
-                              ? Expanded(
-                                  child: Container(
-                                    padding: EdgeInsets.only(left: 10),
-                                    child: TextField(
-                                      style: widget.searchTextStyle,
-                                      decoration: InputDecoration(
-                                        hintStyle: widget.searchHintStyle,
-                                        hintText: widget.searchHint ?? "Search",
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: widget.selectedChipColor ??
-                                                Theme.of(context).primaryColor,
+    return LayoutBuilder(
+      builder: (context, constrain) {
+        return Column(
+          children: [
+            Container(
+              decoration: widget.decoration ??
+                  BoxDecoration(
+                    border:
+                        Border.all(width: 1, color: Theme.of(context).primaryColor),
+                  ),
+              child: Column(
+                children: [
+                  widget.showHeader
+                      ? Container(
+                          color:
+                              widget.headerColor ?? Theme.of(context).primaryColor,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _showSearch
+                                  ? Expanded(
+                                      child: Container(
+                                        padding: EdgeInsets.only(left: 10),
+                                        child: TextField(
+                                          style: widget.searchTextStyle,
+                                          decoration: InputDecoration(
+                                            hintStyle: widget.searchHintStyle,
+                                            hintText: widget.searchHint ?? "Search",
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: widget.selectedChipColor ??
+                                                    Theme.of(context).primaryColor,
+                                              ),
+                                            ),
                                           ),
+                                          onChanged: (val) {
+                                            setState(() {
+                                              _items = widget.updateSearchQuery(
+                                                  val, widget.items);
+                                            });
+                                          },
                                         ),
                                       ),
-                                      onChanged: (val) {
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: widget.title != null
+                                          ? LimitedBox(
+                                        maxWidth: constrain.maxWidth - 50,
+                                            child: Text(
+                                              overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
+                                                softWrap: true,
+                                                widget.title!.data!,
+                                                style: TextStyle(
+                                                    color: widget.title!.style != null
+                                                        ? widget.title!.style!.color
+                                                        : null,
+                                                    fontSize:
+                                                        widget.title!.style != null
+                                                            ? widget.title!.style!
+                                                                    .fontSize ??
+                                                                18
+                                                            : 18),
+                                              ),
+                                          )
+                                          : Text(
+                                              "Select",
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                    ),
+                              widget.searchable != null && widget.searchable!
+                                  ? IconButton(
+                                      icon: _showSearch
+                                          ? widget.closeSearchIcon ??
+                                              Icon(
+                                                Icons.close,
+                                                size: 22,
+                                              )
+                                          : widget.searchIcon ??
+                                              Icon(
+                                                Icons.search,
+                                                size: 22,
+                                              ),
+                                      onPressed: () {
                                         setState(() {
-                                          _items = widget.updateSearchQuery(
-                                              val, widget.items);
+                                          _showSearch = !_showSearch;
+                                          if (!_showSearch) _items = widget.items;
                                         });
                                       },
+                                    )
+                                  : Padding(
+                                      padding: EdgeInsets.all(18),
                                     ),
+                            ],
+                          ),
+                        )
+                      : Container(),
+                  widget.scroll
+                      ? Container(
+                          padding: widget.itemBuilder == null
+                              ? EdgeInsets.symmetric(horizontal: 5)
+                              : null,
+                          width: MediaQuery.of(context).size.width,
+                          height: widget.height ??
+                              MediaQuery.of(context).size.height * 0.08,
+                          child: widget.scrollBar != null
+                              ? Scrollbar(
+                                  thumbVisibility: widget.scrollBar!.isAlwaysShown,
+                                  controller: _scrollController,
+                                  child: ListView.builder(
+                                    controller: _scrollController,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: _items.length,
+                                    itemBuilder: (ctx, index) {
+                                      return widget.itemBuilder != null
+                                          ? widget.itemBuilder!(
+                                              _items[index] as MultiSelectItem<V>,
+                                              widget.state!)
+                                          : _buildItem(
+                                              _items[index] as MultiSelectItem<V>);
+                                    },
                                   ),
                                 )
-                              : Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: widget.title != null
-                                      ? Text(
-                                          widget.title!.data!,
-                                          style: TextStyle(
-                                              color: widget.title!.style != null
-                                                  ? widget.title!.style!.color
-                                                  : null,
-                                              fontSize:
-                                                  widget.title!.style != null
-                                                      ? widget.title!.style!
-                                                              .fontSize ??
-                                                          18
-                                                      : 18),
-                                        )
-                                      : Text(
-                                          "Select",
-                                          style: TextStyle(fontSize: 18),
-                                        ),
-                                ),
-                          widget.searchable != null && widget.searchable!
-                              ? IconButton(
-                                  icon: _showSearch
-                                      ? widget.closeSearchIcon ??
-                                          Icon(
-                                            Icons.close,
-                                            size: 22,
-                                          )
-                                      : widget.searchIcon ??
-                                          Icon(
-                                            Icons.search,
-                                            size: 22,
-                                          ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _showSearch = !_showSearch;
-                                      if (!_showSearch) _items = widget.items;
-                                    });
+                              : ListView.builder(
+                                  controller: _scrollController,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: _items.length,
+                                  itemBuilder: (ctx, index) {
+                                    return widget.itemBuilder != null
+                                        ? widget.itemBuilder!(
+                                            _items[index] as MultiSelectItem<V>,
+                                            widget.state!)
+                                        : _buildItem(
+                                            _items[index] as MultiSelectItem<V>);
                                   },
-                                )
-                              : Padding(
-                                  padding: EdgeInsets.all(18),
                                 ),
-                        ],
-                      ),
-                    )
-                  : Container(),
-              widget.scroll
-                  ? Container(
-                      padding: widget.itemBuilder == null
-                          ? EdgeInsets.symmetric(horizontal: 5)
-                          : null,
-                      width: MediaQuery.of(context).size.width,
-                      height: widget.height ??
-                          MediaQuery.of(context).size.height * 0.08,
-                      child: widget.scrollBar != null
-                          ? Scrollbar(
-                              thumbVisibility: widget.scrollBar!.isAlwaysShown,
-                              controller: _scrollController,
-                              child: ListView.builder(
-                                controller: _scrollController,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: _items.length,
-                                itemBuilder: (ctx, index) {
-                                  return widget.itemBuilder != null
-                                      ? widget.itemBuilder!(
-                                          _items[index] as MultiSelectItem<V>,
-                                          widget.state!)
-                                      : _buildItem(
-                                          _items[index] as MultiSelectItem<V>);
-                                },
-                              ),
-                            )
-                          : ListView.builder(
-                              controller: _scrollController,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: _items.length,
-                              itemBuilder: (ctx, index) {
-                                return widget.itemBuilder != null
-                                    ? widget.itemBuilder!(
-                                        _items[index] as MultiSelectItem<V>,
-                                        widget.state!)
-                                    : _buildItem(
-                                        _items[index] as MultiSelectItem<V>);
-                              },
-                            ),
-                    )
-                  : Container(
-                      height: widget.height,
-                      alignment: Alignment.centerLeft,
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Wrap(
-                        children: widget.itemBuilder != null
-                            ? _items
-                                .map((item) => widget.itemBuilder!(
-                                    item as MultiSelectItem<V>, widget.state!))
-                                .toList()
-                            : _items
-                                .map((item) =>
-                                    _buildItem(item as MultiSelectItem<V>))
-                                .toList(),
-                      ),
-                    ),
-            ],
-          ),
-        ),
-        widget.state != null && widget.state!.hasError
-            ? Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(4, 4, 0, 0),
-                    child: Text(
-                      widget.state!.errorText!,
-                      style: TextStyle(
-                        color: Colors.red[800],
-                        fontSize: 12.5,
-                      ),
-                    ),
-                  ),
+                        )
+                      : Container(
+                          height: widget.height,
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Wrap(
+                            children: widget.itemBuilder != null
+                                ? _items
+                                    .map((item) => widget.itemBuilder!(
+                                        item as MultiSelectItem<V>, widget.state!))
+                                    .toList()
+                                : _items
+                                    .map((item) =>
+                                        _buildItem(item as MultiSelectItem<V>))
+                                    .toList(),
+                          ),
+                        ),
                 ],
-              )
-            : Container(),
-      ],
+              ),
+            ),
+            widget.state != null && widget.state!.hasError
+                ? Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(4, 4, 0, 0),
+                        child: Text(
+                          widget.state!.errorText!,
+                          style: TextStyle(
+                            color: Colors.red[800],
+                            fontSize: 12.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Container(),
+          ],
+        );
+      }
     );
   }
 
